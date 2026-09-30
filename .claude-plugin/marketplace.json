@@ -3,6 +3,7 @@
   "owner": {
     "name": "Benjamin Modayil"
   },
+  "description": "Marketplace for the live-recap Claude Code plugin",
   "plugins": [
     {
       "name": "live-recap",
