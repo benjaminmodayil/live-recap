@@ -1,0 +1,22 @@
+{
+  "name": "live-recap",
+  "version": "0.1.0",
+  "description": "A card above the prompt that says what Claude is working on, refreshed every few minutes while a turn runs",
+  "author": { "name": "Benjamin Modayil" },
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "intervalMinutes": {
+      "type": "number",
+      "title": "Refresh interval (minutes)",
+      "description": "The card first shows after a turn runs this long, then refreshes at the same interval",
+      "default": 2
+    },
+    "source": {
+      "type": "string",
+      "title": "Summary source",
+      "description": "haiku: a small model reads the recent activity (cheap). fork: the session's own model reads the full transcript through its prompt cache (better context, costs more)",
+      "options": ["haiku", "fork"],
+      "default": "haiku"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "live-recap",
+  "owner": {
+    "name": "Benjamin Modayil"
+  },
+  "plugins": [
+    {
+      "name": "live-recap",
+      "source": "./",
+      "description": "A card above the prompt that says what Claude is working on, refreshed every few minutes while a turn runs"
+    }
+  ]
+}
