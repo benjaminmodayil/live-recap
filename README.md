@@ -9,6 +9,21 @@ A Claude Code plugin that draws a card above the prompt saying what Claude is wo
 ╰──────────────────────────────────────────────────────────────────────
 ```
 
+## Requirements
+
+Function hooks are early access and off by default. Enable them before installing, or the plugin loads but never draws:
+
+```json
+// ~/.claude/settings.json
+{
+  "env": {
+    "CLAUDE_CODE_ENABLE_FUNCTION_HOOKS": "1"
+  }
+}
+```
+
+Or export `CLAUDE_CODE_ENABLE_FUNCTION_HOOKS=1` in your shell profile. Restart Claude Code after setting it.
+
 ## Install
 
 ```sh
@@ -31,6 +46,12 @@ Set with `claude plugin configure live-recap`.
 
 - On session start (interactive only), turns off the built-in session recap (`awaySummaryEnabled: false` in user settings) since it draws over this card. This persists if the plugin is removed.
 - Headless runs draw nothing and make no model calls.
+
+## Troubleshooting
+
+- **No card at all**: check `CLAUDE_CODE_ENABLE_FUNCTION_HOOKS` is set (see Requirements), then `claude plugin list` shows `live-recap` loaded.
+- **Card missing on short turns**: expected. The first card appears only after a turn runs `intervalMinutes` (default 2).
+- **Card hidden while a question dialog is open**: the dialog takes over the area above the prompt; the card returns once the dialog closes.
 
 ## Develop
 
