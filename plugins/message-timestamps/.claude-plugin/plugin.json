@@ -1,0 +1,7 @@
+{
+  "name": "message-timestamps",
+  "version": "0.1.0",
+  "description": "Prefixes each Claude reply in the transcript with the local time it arrived, with no model calls",
+  "author": { "name": "Benjamin Modayil" },
+  "types": "./types/index.d.ts"
+}

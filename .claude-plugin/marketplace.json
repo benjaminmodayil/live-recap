@@ -3,12 +3,17 @@
   "owner": {
     "name": "Benjamin Modayil"
   },
-  "description": "Marketplace for the live-recap Claude Code plugin",
+  "description": "Marketplace for the live-recap and message-timestamps Claude Code plugins",
   "plugins": [
     {
       "name": "live-recap",
       "source": "./",
       "description": "A card above the prompt that says what Claude is working on, refreshed every few minutes while a turn runs"
+    },
+    {
+      "name": "message-timestamps",
+      "source": "./plugins/message-timestamps",
+      "description": "Prefixes each Claude reply in the transcript with the local time it arrived, with no model calls"
     }
   ]
 }
