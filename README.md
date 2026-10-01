@@ -9,6 +9,10 @@ A Claude Code plugin that draws a card above the prompt saying what Claude is wo
 ╰──────────────────────────────────────────────────────────────────────
 ```
 
+## Also in this repo
+
+- [`message-timestamps`](plugins/message-timestamps): prefixes each Claude reply with the local time it arrived, no model calls. Install with `claude plugin install message-timestamps@live-recap`.
+
 ## Requirements
 
 Function hooks are early access and off by default. Enable them before installing, or the plugin loads but never draws:
