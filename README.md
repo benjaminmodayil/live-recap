@@ -12,6 +12,7 @@ A Claude Code plugin that draws a card above the prompt saying what Claude is wo
 ## Also in this repo
 
 - [`message-timestamps`](plugins/message-timestamps): prefixes each Claude reply with the local time it arrived, no model calls. Install with `claude plugin install message-timestamps@live-recap`.
+- [`second-opinion`](plugins/second-opinion): asks a panel of non-Anthropic models, through OpenRouter or a LiteLLM proxy, for an isolated second opinion on a plan, spec or hard design question, with a hard pass/block gate. Install with `claude plugin install second-opinion@live-recap`.
 
 ## Requirements
 

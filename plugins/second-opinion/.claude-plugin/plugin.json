@@ -1,0 +1,63 @@
+{
+  "name": "second-opinion",
+  "version": "0.1.0",
+  "description": "Ask a panel of non-Anthropic models (through OpenRouter or a LiteLLM proxy) for an isolated second opinion on a plan, spec or hard design question",
+  "author": { "name": "Benjamin Modayil" },
+  "userConfig": {
+    "openrouterApiKey": {
+      "type": "string",
+      "title": "OpenRouter API key",
+      "description": "Key for https://openrouter.ai. Kept in secure storage. Left empty, the OPENROUTER_API_KEY environment variable is used",
+      "sensitive": true
+    },
+    "litellmBaseUrl": {
+      "type": "string",
+      "title": "LiteLLM proxy URL",
+      "description": "Base URL of a LiteLLM proxy, such as http://localhost:4000. Left empty, the LITELLM_BASE_URL environment variable is used",
+      "default": ""
+    },
+    "litellmApiKey": {
+      "type": "string",
+      "title": "LiteLLM API key",
+      "description": "Virtual or master key for the LiteLLM proxy. Kept in secure storage. Left empty, the LITELLM_API_KEY environment variable is used",
+      "sensitive": true
+    },
+    "strongModels": {
+      "type": "string",
+      "title": "Strong tier models",
+      "description": "Comma-separated provider/model refs in fallback order, such as openrouter/openai/gpt-5.6-sol or litellm/my-model. Add =high (or another thinking level) to a ref to set its reasoning effort",
+      "default": "openrouter/openai/gpt-5.6-sol, openrouter/google/gemini-3.1-pro-preview, openrouter/z-ai/glm-5.3, openrouter/x-ai/grok-4.7, openrouter/deepseek/deepseek-v4-pro"
+    },
+    "balancedModels": {
+      "type": "string",
+      "title": "Balanced tier models",
+      "description": "Comma-separated provider/model refs in fallback order, for the balanced tier",
+      "default": "openrouter/google/gemini-3.8-flash, openrouter/openai/gpt-5.4-mini, openrouter/moonshotai/kimi-k2.6, openrouter/qwen/qwen3.7-plus"
+    },
+    "fastModels": {
+      "type": "string",
+      "title": "Fast tier models",
+      "description": "Comma-separated provider/model refs in fallback order, for the fast tier (validation mode uses it)",
+      "default": "openrouter/z-ai/glm-5.3-flash, openrouter/deepseek/deepseek-v4.1-flash, openrouter/qwen/qwen3.8-flash"
+    },
+    "defaultTier": {
+      "type": "string",
+      "title": "Default tier",
+      "description": "The tier a normal review draws reviewers from",
+      "options": ["strong", "balanced", "fast"],
+      "default": "strong"
+    },
+    "reviewerCount": {
+      "type": "number",
+      "title": "Reviewers per panel",
+      "description": "How many reviewers a normal review runs, 1 to 8. Validation mode always runs one",
+      "default": 3
+    },
+    "timeoutSeconds": {
+      "type": "number",
+      "title": "Reviewer timeout (seconds)",
+      "description": "Wall-clock limit for one reviewer. A reviewer past it counts as a failure, never an approval",
+      "default": 150
+    }
+  }
+}
