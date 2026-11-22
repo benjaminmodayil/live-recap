@@ -125,7 +125,7 @@ Tool results and system reminders are left out of the transcript, and so is this
 
 ## Develop
 
-`.claude-plugin/types/` is written by Claude Code when it loads the plugin from a folder you own; it is gitignored.
+`.claude-plugin/types/` is written by Claude Code when it loads the plugin from a folder you own; the repository's `.gitignore` leaves it out.
 
 ```sh
 tsc -p .                               # typecheck

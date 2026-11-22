@@ -80,10 +80,11 @@ test('a partial panel cannot claim high alignment, and a repeat run adds no agre
 
   const withRepeat = buildConsensus([
     answered('a', { verdict: 'revise', blocking: [finding] }),
-    answered('a-repeat-1', { verdict: 'revise', blocking: [finding] }, { repeatOf: 'openrouter/x/a' }),
+    answered('a-repeat-1', { verdict: 'revise', score: 2, blocking: [finding] }, { repeatOf: 'openrouter/x/a' }),
     answered('b', { verdict: 'approve' }),
   ])
   expect(withRepeat.verdicts).toEqual({ approve: 1, revise: 1 })
+  expect(withRepeat.averageScore).toBe(8)
   expect(withRepeat.repeatedBlocking).toEqual([])
   expect(withRepeat.repeatedReviewers).toEqual(['a-repeat-1'])
   expect(withRepeat.outlierFlags).toEqual(['No rollback step'])

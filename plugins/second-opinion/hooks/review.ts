@@ -354,7 +354,8 @@ export const buildConsensus = (reviewers: ReviewerResult[]): Consensus => {
   // A repeat is the same model asked again: it adds findings, never agreement.
   const independent = answered.filter(reviewer => !reviewer.repeatOf)
   const voters = independent.length > 0 ? independent : answered
-  const scores = answered
+  // Scores average over independent opinions too: a repeat's fresh sample is no second vote.
+  const scores = voters
     .map(reviewer => reviewer.parsed.score)
     .filter((score): score is number => typeof score === 'number')
 
