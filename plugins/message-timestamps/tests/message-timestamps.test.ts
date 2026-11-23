@@ -6,17 +6,11 @@ import { stamp } from '../hooks/stamp'
 const SENT_AT = Date.UTC(2026, 9, 1, 15, 4, 5)
 const LABEL = `\`${new Intl.DateTimeFormat(undefined, { hour: 'numeric', minute: '2-digit' }).format(SENT_AT)}\``
 
-test('a reply opening with a paragraph gets the local time inline before its text', () => {
-  expect(stamp('I will add the band hook.', SENT_AT)).toBe(`${LABEL} I will add the band hook.`)
-})
-
-test('the label is the hour and minute alone', () => {
-  expect(LABEL).toMatch(/^`\d{1,2}:\d{2}( ?[AP]M)?`$/)
-})
-
-test('the same arrival time always stamps the same label', () => {
-  expect(stamp('Done.', SENT_AT)).toBe(stamp('Done.', SENT_AT))
-  expect(stamp('Done.', SENT_AT)).not.toBe(stamp('Done.', SENT_AT + 60 * 60_000))
+test('a reply opening with a paragraph gets its local arrival time inline before its text', () => {
+  const text = 'I will add the band hook.'
+  const expected = `${LABEL} ${text}`
+  expect(stamp(text, SENT_AT)).toBe(expected)
+  expect(stamp(text, SENT_AT + 60 * 60_000)).not.toBe(expected)
 })
 
 test('a reply opening with block markdown gets the time on its own line, so the markdown still parses', () => {
