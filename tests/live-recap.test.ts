@@ -24,11 +24,10 @@ const engine = (on: On, config: ConfigStandIn = {}) => {
     key: 'recap',
     label: 'Session recap',
     kind: 'boolean',
-    value: config.isRecapOn ?? false,
     provider: { plugin: 'engine', tier: 'core' },
     isLocked: false,
   } as const
-  on('config.list', () => ({ value: [recapRow] }))
+  on('config.list', () => ({ value: [{ ...recapRow, value: config.isRecapOn ?? false }] }))
   on('config.set', (_$, e) => {
     config.sets?.push({ key: e.key, value: e.value })
     return { value: e.value }
@@ -59,28 +58,17 @@ const REVIEWER = {
   agent_type: 'general-purpose',
 }
 
-test('an interactive session turns the built-in session recap off', async ($, on) => {
-  const config = { isRecapOn: true, sets: [] as { key: string; value: unknown }[] }
-  engine(on, config)
-  mock.clock(on, { now: 0 })
-  await $.session.start(SESSION)
-  expect(config.sets).toEqual([{ key: 'recap', value: false }])
-})
-
-test('a session with the built-in recap already off writes nothing', async ($, on) => {
-  const config = { isRecapOn: false, sets: [] as { key: string; value: unknown }[] }
-  engine(on, config)
-  mock.clock(on, { now: 0 })
-  await $.session.start(SESSION)
-  expect(config.sets).toEqual([])
-})
-
-test('a headless session leaves the built-in recap alone', async ($, on) => {
+test('only an interactive session with recap enabled turns it off', async ($, on) => {
   const config = { isRecapOn: true, sets: [] as { key: string; value: unknown }[] }
   engine(on, config)
   mock.clock(on, { now: 0 })
   await $.session.start({ ...SESSION, isInteractive: false })
   expect(config.sets).toEqual([])
+  await $.session.start(SESSION)
+  expect(config.sets).toEqual([{ key: 'recap', value: false }])
+  config.isRecapOn = false
+  await $.session.start(SESSION)
+  expect(config.sets).toEqual([{ key: 'recap', value: false }])
 })
 
 test('the card shows after the interval, and its last summary stays until the next prompt', async ($, on) => {
