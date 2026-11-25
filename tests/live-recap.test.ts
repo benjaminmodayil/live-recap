@@ -16,7 +16,7 @@ const BAND = { plugin: 'live-recap', surface: 'terminal', component: 'AbovePromp
 const SESSION = { cwd: '/tmp', surface: 'terminal', isInteractive: true } as const
 const MAIN_END = { answer: 'done', durationMs: 1, isAborted: false, turnId: 't1', reason: 'answer' } as const
 
-type ConfigStandIn = { isRecapOn?: boolean; sets?: { key: string; value: unknown }[] }
+type ConfigStandIn = { isRecapOn?: boolean; isRecapLocked?: boolean; sets?: { key: string; value: unknown }[] }
 
 // Nothing answers beneath the plugin in a test, so these stand in for the engine's own events.
 const engine = (on: On, config: ConfigStandIn = {}) => {
@@ -25,9 +25,8 @@ const engine = (on: On, config: ConfigStandIn = {}) => {
     label: 'Session recap',
     kind: 'boolean',
     provider: { plugin: 'engine', tier: 'core' },
-    isLocked: false,
   } as const
-  on('config.list', () => ({ value: [{ ...recapRow, value: config.isRecapOn ?? false }] }))
+  on('config.list', () => ({ value: [{ ...recapRow, value: config.isRecapOn ?? false, isLocked: config.isRecapLocked ?? false }] }))
   on('config.set', (_$, e) => {
     config.sets?.push({ key: e.key, value: e.value })
     return { value: e.value }
@@ -58,12 +57,16 @@ const REVIEWER = {
   agent_type: 'general-purpose',
 }
 
-test('only an interactive session with recap enabled turns it off', async ($, on) => {
-  const config = { isRecapOn: true, sets: [] as { key: string; value: unknown }[] }
+test('only an interactive session with recap enabled and unlocked turns it off', async ($, on) => {
+  const config = { isRecapOn: true, isRecapLocked: false, sets: [] as { key: string; value: unknown }[] }
   engine(on, config)
   mock.clock(on, { now: 0 })
   await $.session.start({ ...SESSION, isInteractive: false })
   expect(config.sets).toEqual([])
+  config.isRecapLocked = true
+  await $.session.start(SESSION)
+  expect(config.sets).toEqual([])
+  config.isRecapLocked = false
   await $.session.start(SESSION)
   expect(config.sets).toEqual([{ key: 'recap', value: false }])
   config.isRecapOn = false
