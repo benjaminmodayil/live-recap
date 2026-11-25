@@ -17,6 +17,9 @@ test('an OpenRouter request asks for unified reasoning effort, hides the reasoni
   expect(body.reasoning).toEqual({ effort: 'xhigh', exclude: true })
   expect(body.usage).toEqual({ include: true })
   expect(body.max_tokens).toBeUndefined()
+  const off = JSON.parse(String(buildChatRequest(OPENROUTER, 'm', 's', 'u', 'off').init.body))
+  expect(off.reasoning).toBeUndefined()
+  expect(off.reasoning_effort).toBeUndefined()
 })
 
 test('a LiteLLM request uses reasoning_effort, capped at high, and lets the proxy drop what a backend lacks', () => {
@@ -27,17 +30,14 @@ test('a LiteLLM request uses reasoning_effort, capped at high, and lets the prox
   expect(body.reasoning_effort).toBe('high')
   expect(body.drop_params).toBe(true)
   expect(body.reasoning).toBeUndefined()
+  const off = JSON.parse(String(buildChatRequest(LITELLM, 'm', 's', 'u', 'off').init.body))
+  expect(off.reasoning).toBeUndefined()
+  expect(off.reasoning_effort).toBeUndefined()
 })
 
-test('thinking off sends no reasoning field at all', () => {
-  for (const provider of [OPENROUTER, LITELLM]) {
-    const body = JSON.parse(String(buildChatRequest(provider, 'm', 's', 'u', 'off').init.body))
-    expect(body.reasoning).toBeUndefined()
-    expect(body.reasoning_effort).toBeUndefined()
-  }
-})
-
-test('a proxy without a key sends no authorization header', () => {
+test('a proxy sends an authorization header only when a key is configured', () => {
+  const configured = buildChatRequest(LITELLM, 'm', 's', 'u', 'low')
+  expect(configured.init.headers?.authorization).toBe('Bearer fake-litellm-key')
   const { init } = buildChatRequest({ ...LITELLM, apiKey: undefined }, 'm', 's', 'u', 'low')
   expect(init.headers?.authorization).toBeUndefined()
 })
